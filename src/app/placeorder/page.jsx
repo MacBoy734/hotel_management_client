@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux"
 import { useRouter } from "next/navigation";
 import { logout } from "../../slices/authSlice"
-import Spinner from "../../components/Spinner"
 import { toast } from "react-toastify";
+import { PulseLoader } from 'react-spinners'
 
 const placeOrderPage = () => {
   const cart = useSelector((state) => state.cart)
@@ -22,12 +22,12 @@ const placeOrderPage = () => {
     paymentMethod: "Credit Card"
   });
   const [isHydrated, setIsHydrated] = useState(false)
-   useEffect(() => {
-      if (status !== "loading" && !isAuthenticated ) {
-        toast.error('you need to be logged in!')
-        router.push("/auth/login")
-      }
-    }, [user, status, router])
+  useEffect(() => {
+    if (status !== "loading" && !isAuthenticated) {
+      toast.error('you need to be logged in!')
+      router.push("/auth/login")
+    }
+  }, [user, status, router])
   useEffect(() => {
     setIsHydrated(true)
     setFormData((prevData) => ({
@@ -54,17 +54,17 @@ const placeOrderPage = () => {
         body: JSON.stringify(formData),
         credentials: 'include'
       })
-        if (!response.ok) {
-          const { error } = await response.json()
-          if(response.status === 403){
-            dispatch(logout())
-            router.replace('/auth/login')
-            toast.error(error)
-            return
-          }
+      if (!response.ok) {
+        const { error } = await response.json()
+        if (response.status === 403) {
+          dispatch(logout())
+          router.replace('/auth/login')
           toast.error(error)
           return
         }
+        toast.error(error)
+        return
+      }
       setFormData({
         name: "",
         email: "",
@@ -84,7 +84,10 @@ const placeOrderPage = () => {
 
   if (!isHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-[65vh]"><Spinner loading={!isHydrated} message="Loading..." color="black" /></div>
+      <div className="flex flex-col items-center justify-center min-h-[20vh] w-full">
+        <PulseLoader color="#36d7b7" size={20} margin={5} />
+        <p className="mt-4 text-xl font-bold text-black">Loading....</p>
+      </div>
     )
   }
 

@@ -141,20 +141,20 @@ export default function Navbar() {
               <BiSearch className="text-2xl" />
             </button>
 
-            <button onClick={() => setMenuOpen(!menuOpen)}>
-              {menuOpen ? <IoMdClose className="text-2xl font-bold size-6 text-white" /> : <IoIosMenu className="text-2xl font-bold size-6 text-white" />}
+            <button onClick={() => setMenuOpen(true)}>
+              <IoIosMenu className="text-2xl font-bold size-6 text-white" />
             </button>
           </div>
         </div>
       </section>
       {/* Mobile Search Bar */}
       {searchOpen && (
-        <div className="md:hidden flex flex-col items-center space-y-2 mt-3 bg-blue-700 p-3 rounded-md shadow-lg">
+        <div className="md:hidden flex flex-col items-center space-y-2 mt-3 p-3 rounded-md shadow-lg">
           <form className="flex space-x-1 w-full" onSubmit={handleSearch}>
             <input
               type="text"
-              className="p-2 text-lg rounded-md w-full text-black"
-              placeholder="Search Anything..."
+              className="p-2 text-lg rounded-md w-full border"
+              placeholder="I Want To Eat..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -170,9 +170,12 @@ export default function Navbar() {
 
       {/* Mobile Menu (Only visible when menuOpen is true) */}
       {menuOpen && (
-        <div className="md:hidden flex flex-col items-center space-y-4 mt-4 bg-blue-700 p-4 rounded-md shadow-lg">
+        <div className={`md:hidden flex flex-col gap-11 bg-gray-900 p-4 rounded-md shadow-lg h-screen fixed left-0 top-0 w-3/4 z-50`}>
+          <div className="absolute right-6 font-bold">
+            <IoMdClose className="text-4xl font-bold size-6 text-white" onClick={() => setMenuOpen(false)} />
+          </div>
 
-          <div>
+          <div className="pt-10 text-lg font-semibold">
             {isAuthenticated ? (
               <ul className="py-2">
                 <li className="px-4 py-2"> <Link href="/users/profile" onClick={() => setMenuOpen(false)}>Profile</Link></li>
@@ -183,7 +186,7 @@ export default function Navbar() {
                   )
                 }
                 <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket ({cartItems?.length || 0})</Link></li>
-                <li className="px-4 py-2"><button onClick={handleLogOut}>Logout</button></li>
+                <li className="px-4 py-2 text-red-500"><button onClick={handleLogOut}>Logout</button></li>
               </ul>
             ) : (
               <ul className="py-2">

@@ -1,6 +1,7 @@
 import Hero from "./_components/Hero"
 import MenuSection from "./_components/MenuSection"
 import AboutSection from "./_components/AboutSection"
+import ContactSection from "./_components/ContactSection"
 import Link from 'next/link'
 
 export default function Home() {
@@ -38,6 +39,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      <ContactSection />
     </div>
   )
 }

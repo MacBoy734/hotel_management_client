@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { FiUsers, FiShoppingCart, FiDollarSign, FiMail, FiList, FiSettings, FiUserPlus, FiCoffee } from "react-icons/fi";
+import Link from "next/link";
 
 const Dashboard = () => {
   const [orders, setOrders] = useState(120);
@@ -57,30 +58,30 @@ const Dashboard = () => {
             <p className="text-gray-600 text-lg">{newsletters}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+        <Link href="/admin/manage-foods" className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4 cursor-pointer hover:bg-gray-100">
           <FiList className="text-4xl text-yellow-500" />
           <div>
-            <h2 className="text-xl font-semibold">Menu Items</h2>
+            <h2 className="text-xl font-semibold">Manage Foods</h2>
             <p className="text-gray-600 text-lg">{foods}</p>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+        </Link>
+        <Link href="/admin/settings" className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4 cursor-pointer hover:bg-gray-100">
           <FiSettings className="text-4xl text-gray-500" />
           <div>
             <h2 className="text-xl font-semibold">Settings</h2>
             <p className="text-gray-600 text-lg">Manage Site</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
+        <Link href="/admin/manage-users" className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4 cursor-pointer hover:bg-gray-100">
           <FiUserPlus className="text-4xl text-indigo-500" />
           <div>
-            <h2 className="text-xl font-semibold">New Users</h2>
+            <h2 className="text-xl font-semibold">Manage Users</h2>
             <p className="text-gray-600 text-lg">{newUsers}</p>
           </div>
-        </div>
+        </Link>
         <div className="bg-white p-6 rounded-lg shadow-md flex items-center gap-4">
           <FiCoffee className="text-4xl text-brown-500" />
           <div>

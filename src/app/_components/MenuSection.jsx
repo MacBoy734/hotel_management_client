@@ -72,10 +72,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.length > 0 ? (
+                    ) : foods.filter(food => food.category === "Breakfast").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.map((food) => (
+                                foods.filter(food => food.category === "Breakfast").slice(0, 3).map((food) => (
                                     <div className='flex items-center justify-between px-5' key={food?._id}>
                                         <div className='flex gap-3 items-center'>
                                             <img src={food.images[0].url} alt={food.name} className='size-32' />
@@ -103,10 +103,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.length > 0 ? (
+                    ) : foods.filter(food => food.category === "Lunch").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.map((food) => (
+                                foods.filter(food => food.category === "Lunch").slice(0, 3).map((food) => (
                                     <div className='flex items-center justify-between px-5 bg-white' key={food?._id}>
                                         <div className='flex gap-3 items-center'>
                                             <img src={food.images[0].url} alt={food.name} className='size-32' />
@@ -134,10 +134,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.length > 0 ? (
+                    ) : foods.filter(food => food.category === "Dinner").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.map((food) => (
+                                foods.filter(food => food.category === "Dinner").slice(0, 3).map((food) => (
                                     <div className='flex items-center justify-between px-5' key={food?._id}>
                                         <div className='flex gap-3 items-center'>
                                             <img src={food.images[0].url} alt={food.name} className='size-32' />
@@ -165,10 +165,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.length > 0 ? (
+                    ) : foods.filter(food => food.category === "Drinks").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.map((food) => (
+                                foods.filter(food => food.category === "Drinks").slice(0, 3).map((food) => (
                                     <div className='flex items-center justify-between px-5' key={food?._id}>
                                         <div className='flex gap-3 items-center'>
                                             <img src={food.images[0].url} alt={food.name} className='size-32' />
@@ -196,10 +196,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.length > 0 ? (
+                    ) : foods.filter(food => food.category === "Snacks").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.map((food) => (
+                                foods.filter(food => food.category === "Snacks").slice(0, 3).map((food) => (
                                     <div className='flex items-center justify-between px-5' key={food?._id}>
                                         <div className='flex gap-3 items-center'>
                                             <img src={food.images[0].url} alt={food.name} className='size-32' />

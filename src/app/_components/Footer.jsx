@@ -35,8 +35,8 @@ const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-8">
       <div className="container mx-auto px-6">
-      <p className="text-md text-yellow-400 mb-10 font-semibold text-center">
-            Designed and Developed by <a href="https://macboy.netlify.app/" target='_blank' className='text-emerald-400 font-bold texl-lg underline'>Mac Boy</a>✨🤗.
+      <p className="text-sm text-yellow-400 mb-10 font-semibold text-center font-sniglet">
+            Designed and Developed by <a href="https://macboy.netlify.app/" target='_blank' className='text-emerald-400 font-bold texl-md underline'>Mac Boy</a>✨.
       </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-12">
           <div>

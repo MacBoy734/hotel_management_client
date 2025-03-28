@@ -1,9 +1,12 @@
 "use client"
 import React from 'react'
 import { useState, useEffect } from "react"
+import { useDispatch } from 'react-redux'
+import { addToCart } from '../../slices/cartSlice'
 import io from 'socket.io-client'
 import { PulseLoader } from 'react-spinners'
 const MenuSection = () => {
+    const dispatch = useDispatch()
     const socket = io(`${process.env.NEXT_PUBLIC_SERVER_URL}`)
     const [isLoading, setIsLoading] = useState(true)
     const [foods, setFoods] = useState([])
@@ -55,6 +58,18 @@ const MenuSection = () => {
             socket.off("foodUpdated", handleFoodUpdate);
         };
     }, []);
+    
+      const handleAddToBasket = (item) => {
+        const food = {
+          id: item._id,
+          name: item.name,
+          price: item.price,
+          totalQuantity: item.quantity,
+          quantity: 1,
+          images: item.images
+        }
+        return dispatch(addToCart(food))
+      }
     return (
         <div className='py-10 bg-gray-200 md:px-16'>
             <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
@@ -75,13 +90,18 @@ const MenuSection = () => {
                     ) : foods.filter(food => food.category === "Breakfast").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Breakfast").slice(0, 3).map((food) => (
-                                    <div className='flex items-center justify-between px-5' key={food?._id}>
-                                        <div className='flex gap-3 items-center'>
-                                            <img src={food.images[0].url} alt={food.name} className='size-32' />
-                                            <p>{food.name}</p>
+                                foods.filter(food => food.category === "Breakfast").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                    <div key={food?._id}>
+                                        <div className='flex items-center justify-between px-5' >
+                                            <div className='flex gap-3 items-center'>
+                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <p>{food.name}</p>
+                                            </div>
+                                            <small>{food.price}</small>
                                         </div>
-                                        <small>{food.price}</small>
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition mt-6" onClick={() => handleAddToBasket(food)}>
+                                            Add to Basket
+                                        </button>
                                     </div>
                                 ))
                             }
@@ -106,13 +126,18 @@ const MenuSection = () => {
                     ) : foods.filter(food => food.category === "Lunch").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Lunch").slice(0, 3).map((food) => (
-                                    <div className='flex items-center justify-between px-5 bg-white' key={food?._id}>
-                                        <div className='flex gap-3 items-center'>
-                                            <img src={food.images[0].url} alt={food.name} className='size-32' />
-                                            <p>{food.name}</p>
+                                foods.filter(food => food.category === "Lunch").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                    <div key={food?._id}>
+                                        <div className='flex items-center justify-between px-5' >
+                                            <div className='flex gap-3 items-center'>
+                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <p>{food.name}</p>
+                                            </div>
+                                            <small>{food.price}</small>
                                         </div>
-                                        <small>{food.price}</small>
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition mt-6" onClick={() => handleAddToBasket(food)}>
+                                            Add to Basket
+                                        </button>
                                     </div>
                                 ))
                             }
@@ -137,13 +162,18 @@ const MenuSection = () => {
                     ) : foods.filter(food => food.category === "Dinner").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Dinner").slice(0, 3).map((food) => (
-                                    <div className='flex items-center justify-between px-5' key={food?._id}>
-                                        <div className='flex gap-3 items-center'>
-                                            <img src={food.images[0].url} alt={food.name} className='size-32' />
-                                            <p>{food.name}</p>
+                                foods.filter(food => food.category === "Dinner").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                    <div key={food?._id}>
+                                        <div className='flex items-center justify-between px-5' >
+                                            <div className='flex gap-3 items-center'>
+                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <p>{food.name}</p>
+                                            </div>
+                                            <small>{food.price}</small>
                                         </div>
-                                        <small>{food.price}</small>
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition mt-6" onClick={() => handleAddToBasket(food)}>
+                                            Add to Basket
+                                        </button>
                                     </div>
                                 ))
                             }
@@ -168,13 +198,18 @@ const MenuSection = () => {
                     ) : foods.filter(food => food.category === "Drinks").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Drinks").slice(0, 3).map((food) => (
-                                    <div className='flex items-center justify-between px-5' key={food?._id}>
-                                        <div className='flex gap-3 items-center'>
-                                            <img src={food.images[0].url} alt={food.name} className='size-32' />
-                                            <p>{food.name}</p>
+                                foods.filter(food => food.category === "Drinks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                    <div key={food?._id}>
+                                        <div className='flex items-center justify-between px-5' >
+                                            <div className='flex gap-3 items-center'>
+                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <p>{food.name}</p>
+                                            </div>
+                                            <small>{food.price}</small>
                                         </div>
-                                        <small>{food.price}</small>
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition mt-6" onClick={() => handleAddToBasket(food)}>
+                                            Add to Basket
+                                        </button>
                                     </div>
                                 ))
                             }
@@ -199,13 +234,18 @@ const MenuSection = () => {
                     ) : foods.filter(food => food.category === "Snacks").length > 0 ? (
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Snacks").slice(0, 3).map((food) => (
-                                    <div className='flex items-center justify-between px-5' key={food?._id}>
-                                        <div className='flex gap-3 items-center'>
-                                            <img src={food.images[0].url} alt={food.name} className='size-32' />
-                                            <p>{food.name}</p>
+                                foods.filter(food => food.category === "Snacks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                    <div key={food?._id}>
+                                        <div className='flex items-center justify-between px-5' >
+                                            <div className='flex gap-3 items-center'>
+                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <p>{food.name}</p>
+                                            </div>
+                                            <small>{food.price}</small>
                                         </div>
-                                        <small>{food.price}</small>
+                                        <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition mt-6" onClick={() => handleAddToBasket(food)}>
+                                            Add to Basket
+                                        </button>
                                     </div>
                                 ))
                             }

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
+import { ClipLoader } from 'react-spinners'
 
 const ProfilePage = () => {
   const { user, status, isAuthenticated } = useSelector((state) => state.auth)
@@ -34,6 +35,15 @@ const ProfilePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     setIsEditing(false)
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
+        <ClipLoader color="#36d7b7" size={60} margin={5} />
+        <p className="mt-4 text-xl font-bold text-black">Loading Profile....</p>
+      </div>
+    )
   }
 
   return (
@@ -81,13 +91,22 @@ const ProfilePage = () => {
               required
             />
           </div>
-          <button
-            type="submit"
-            disabled
-            className="bg-green-600 text-white px-6 py-2 rounded-lg focus:outline-none hover:bg-green-700 opacity-50"
-          >
-            Save Changes
-          </button>
+          <div className="flex items-center justify-around my-5">
+            <button
+              onClick={handleEditToggle}
+              className="bg-gray-800 text-white px-6 py-2 rounded-lg focus:outline-none hover:bg-green-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled
+              className="bg-green-600 text-white px-6 py-2 rounded-lg focus:outline-none hover:bg-green-700 opacity-50"
+            >
+              Save Changes
+            </button>
+
+          </div>
         </form>
       ) : (
         <div className="mb-8">
@@ -95,7 +114,8 @@ const ProfilePage = () => {
           <p className='my-3 text-lg'>Username: {user?.username || 'N/A'}</p>
           <p className='my-3 text-lg'>Email: {user?.email || 'N/A'}</p>
           <p className='my-3 text-lg'>Phone number: {user?.phone || 'N/A'}</p>
-          <p className='my-3 text-lg'>Role: {user?.isAdmin ? 'Admin' : 'Customer'}</p>
+          <p className='my-3 text-lg'>Role: {user?.isAdmin ? 'Admin' : 'Customer' || 'N/A'}</p>
+          <p className='my-3 text-lg'>Joined at: {new Date(user?.createdAt).toLocaleString()}</p>
           <button
             onClick={handleEditToggle}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg focus:outline-none hover:bg-blue-700 my-5"
@@ -109,7 +129,7 @@ const ProfilePage = () => {
       <div className="space-y-6">
         <h2 className="text-2xl font-semibold text-center underline">Order History</h2>
         <p className='my-7 text-lg'>check your orders <Link href="/users/orders" className='underline text-blue-500 '>Here</Link></p>
-        
+
       </div>
     </div>
   )

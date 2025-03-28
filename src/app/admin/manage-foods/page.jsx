@@ -84,7 +84,7 @@ const ManageFoods = () => {
         const { error } = await response.json()
         if (response.status === 403) {
           dispatch(logout())
-          router.replace('/auth/login')
+          router.replace('/unauthorized')
           toast.error(error)
           return
         }
@@ -166,7 +166,7 @@ const ManageFoods = () => {
         const { error } = await response.json()
         if (response.status === 403) {
           dispatch(logout())
-          router.replace('/auth/login')
+          router.replace('/unauthorized')
           toast.error(error)
           return
         }
@@ -174,7 +174,7 @@ const ManageFoods = () => {
         return
       }
       const data = await response.json();
-      setFood(Foods.map((p) => (p.id === editFood.id ? data : p)));
+      setFoods(foods.map((p) => (p.id === editFood.id ? data : p)));
       setEditFood(null);
     } catch (error) {
       console.error("Error editing food:", error);
@@ -183,8 +183,7 @@ const ManageFoods = () => {
 
 
   const handleEdit = (id) => {
-    console.log(id)
-    router.push(`/foods/edit/${id}`)
+    router.push(`/menu/edit/${id}`)
   }
 
   // Handle delete food

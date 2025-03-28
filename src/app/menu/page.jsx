@@ -1,6 +1,8 @@
 "use client"
 import { useState, useEffect } from "react";
 import io from 'socket.io-client'
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, incrementQuantity, decrementQuantity } from '../../slices/cartSlice';
 import { PulseLoader } from 'react-spinners'
 
 const menuItems = [
@@ -14,13 +16,15 @@ const menuItems = [
 const categories = ["Breakfast", "Lunch", "Dinner", "Drinks", "Snacks"];
 
 export default function MenuPage() {
+  const dispatch = useDispatch()
+  const { cartItems } = useSelector((state) => state.cart)
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [foods, setFoods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const socket = io(`${process.env.NEXT_PUBLIC_SERVER_URL}`)
-
+  
   useEffect(() => {
     const fetchFoods = async () => {
       try {
@@ -67,6 +71,18 @@ export default function MenuPage() {
       socket.off("foodUpdated", handleFoodUpdate);
     };
   }, []);
+
+  const handleAddToBasket = (item) => {
+    const food = {
+      id: item._id,
+      name: item.name,
+      price: item.price,
+      totalQuantity: item.quantity,
+      quantity: 1,
+      images: item.images
+    }
+    return dispatch(addToCart(food))
+  }
 
 
   const filteredItems = foods.filter((item) =>
@@ -115,7 +131,7 @@ export default function MenuPage() {
         </p>
       ) : filteredItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredItems.map((item) => (
+          {filteredItems.filter(item => item.isAvailable === true).map((item) => (
             <div
               key={item._id}
               className="overflow-hidden rounded-lg shadow-lg bg-white transform transition duration-300 hover:scale-105"
@@ -126,7 +142,7 @@ export default function MenuPage() {
                 <p className="text-gray-600 text-lg mt-1">{item.category}</p>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-xl font-bold text-blue-600">${item.price}</span>
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition">
+                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition" onClick={() => handleAddToBasket(item)}>
                     Add to Basket
                   </button>
                 </div>

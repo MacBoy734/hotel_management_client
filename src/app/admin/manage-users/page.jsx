@@ -32,7 +32,7 @@ const ManageUsers = () => {
           const { error } = await response.json()
           if (response.status === 403) {
             dispatch(logout())
-            router.replace('/auth/login')
+            router.replace('/unauthorized')
             toast.error(error)
             return
           }
@@ -64,7 +64,7 @@ const ManageUsers = () => {
             const { error } = await response.json()
             if (response.status === 403) {
               dispatch(logout())
-              router.replace('/auth/login')
+              router.replace('/unauthorized')
               toast.error(error)
               return
             }

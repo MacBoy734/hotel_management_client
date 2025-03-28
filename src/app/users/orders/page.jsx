@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { useRouter } from "next/navigation";
 import { logout } from "../../../slices/authSlice"
 import { PulseLoader } from 'react-spinners'
+import { toast } from "react-toastify";
 
 export default function MyOrdersPage() {
   const { user, isAuthenticated, status } = useSelector((state) => state.auth)

@@ -65,7 +65,7 @@ export default function Navbar() {
     <nav className="bg-gray-800 text-white p-4">
       <section>
         <div className="md:flex hidden items-center justify-around gap-3">
-          <Link href="/" className="text-white text-2xl">Eatery</Link>
+          <Link href="/" className="text-white text-2xl hover:text-sky-500">Eatery</Link>
           <form className="flex space-x-1 w-[50%]" onSubmit={handleSearch}>
             <input
               type="text"
@@ -186,13 +186,19 @@ export default function Navbar() {
                   )
                 }
                 <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket ({cartItems?.length || 0})</Link></li>
-                <li className="px-4 py-2 text-red-500"><button onClick={handleLogOut}>Logout</button></li>
+                <li className="px-4 py-2"><Link href="/help" onClick={() => setMenuOpen(false)}>Help</Link></li>
+                <li className="px-4 py-2"><Link href="/help/FAQS" onClick={() => setMenuOpen(false)}>FAQS</Link></li>
+                <li className="px-4 py-2"><Link href="/help/contact-support">Contact Support</Link></li>
+                <li className="px-4 py-2 text-red-500"><button onClick={() => {handleLogOut(); setMenuOpen(false);}}>Logout</button></li>
               </ul>
             ) : (
               <ul className="py-2">
                 <li className="px-4 py-2"><Link href="/auth/login">Login</Link></li>
                 <li className="px-4 py-2"><Link href="/auth/register">Register</Link></li>
                 <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket ({cartItems?.length || 0})</Link></li>
+                <li className="px-4 py-2"><Link href="/help" onClick={() => setMenuOpen(false)}>Help</Link></li>
+                <li className="px-4 py-2"><Link href="/help/FAQS" onClick={() => setMenuOpen(false)}>FAQS</Link></li>
+                <li className="px-4 py-2"><Link href="/help/contact-support">Contact Support</Link></li>
               </ul>
             )}
 

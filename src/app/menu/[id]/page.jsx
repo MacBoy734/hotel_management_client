@@ -64,32 +64,49 @@ const ProductPage = () => {
     )
 }
 
-  return (
-    <div className="bg-black text-white">
-      <h1 className="text-3xl font-bold mb-6 pl-3">{product?.name}</h1>
-      <div className="">
-        <div className="m-5">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+return (
+  <div className="bg-gray-900 text-white min-h-screen p-6">
+    <div className="max-w-5xl mx-auto">
+      {/* Product Name */}
+      <h1 className="text-4xl font-bold mb-4 text-center">{product?.name}</h1>
+
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Left Section - Product Images */}
+        <div className="md:w-1/2">
+          {/* Main Image */}
+          <div className="border border-gray-700 rounded-lg overflow-hidden">
+            <img
+              src={product?.images[0]?.url || "/placeholder.png"}
+              alt={product?.name}
+              className="w-full h-80 object-cover"
+            />
+          </div>
+
+          {/* Thumbnail Images */}
+          <div className="flex gap-3 mt-4">
             {product?.images.map((image, index) => (
-              <div key={index}>
-                <img
-                  src={image.url || "/placeholder.png"}
-                  alt={`${product?.name} - Image ${index + 1}`}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
+              <img
+                key={index}
+                src={image.url || "/placeholder.png"}
+                alt={`${product?.name} - ${index + 1}`}
+                className="w-20 h-20 object-cover border border-gray-600 rounded-lg cursor-pointer hover:scale-105 transition"
+              />
             ))}
           </div>
         </div>
 
-        {/* Product Details */}
-        <div className='mt-3 p-3'>
-          <p className="text-2xl mb-4 ml-5">Price: ${product?.price}</p>
-          <p className='text-center my-10 underline text-xl'>product description</p>
-          <p className="mb-6 ml-4">{product?.description}</p>
+        {/* Right Section - Product Details */}
+        <div className="md:w-1/2 flex flex-col justify-center">
+          <p className="text-3xl font-semibold text-blue-400">${product?.price}</p>
 
+          {/* Product Description */}
+          <p className="text-lg text-gray-300 mt-4 leading-relaxed">
+            {product?.description}
+          </p>
+
+          {/* Add to Cart Button */}
           <button
-            className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg"
+            className="mt-6 bg-blue-600 hover:bg-blue-500 text-white py-3 px-6 rounded-lg text-lg font-semibold transition shadow-md"
             onClick={(e) => {
               e.preventDefault();
               handleAddToCart(
@@ -106,7 +123,8 @@ const ProductPage = () => {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default ProductPage;

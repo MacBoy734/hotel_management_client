@@ -343,7 +343,7 @@ const ManageFoods = () => {
             ) : foods.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {foods.map((food) => (
-                  <div key={food.id} className="bg-white shadow rounded-lg p-4 flex flex-col items-center">
+                  <div key={food._id} className="bg-white shadow rounded-lg p-4 flex flex-col items-center">
                     <img src={food.image} alt={food?.name} className="w-24 h-24 object-cover rounded-full mb-3" />
                     <h4 className="text-md font-bold">{food?.name}</h4>
                     <p className="text-sm text-gray-600">{food.description}</p>

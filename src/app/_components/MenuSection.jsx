@@ -22,6 +22,9 @@ const MenuSection = () => {
                     return;
                 }
                 const data = await res.json();
+                if(data.length === 0){
+                    console.log("no foods")
+                }
                 setFoods(data);
             } catch (err) {
                 setError("Failed to fetch foods");

@@ -1,9 +1,10 @@
 "use client"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
-import {removeFromCart, incrementQuantity, decrementQuantity } from "../../slices/cartSlice"
+import { removeFromCart, incrementQuantity, decrementQuantity } from "../../slices/cartSlice"
 import Link from "next/link"
 import Spinner from "../_components/Spinner"
+import { toast } from "react-toastify"
 
 const CartPage = () => {
   const cart = useSelector((state) => state.cart)
@@ -14,9 +15,46 @@ const CartPage = () => {
     console.log(cart)
   }, [])
 
-  if(!isHydrated){
+  // const checkAvailability = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods/validatecart`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ items: cart.cartItems }),
+  //     });
+
+  //     const data = await response.json();
+  //     if (!response.ok) {
+  //       const {error} =await response.json()
+  //       if(error){
+  //         toast.error(error)
+  //         return
+  //       }
+  //       updateCartAvailability(data.unavailableItems);
+  //       return false;
+  //     }
+
+  //     return true;
+  //   } catch (error) {
+  //     alert("Error checking availability");
+  //     return false;
+  //   }
+  // };
+
+  // Update cart items with new availability status
+  // const updateCartAvailability = (unavailableList) => {
+  //   setCartItems((prevCart) =>
+  //     prevCart.map((item) => ({
+  //       ...item,
+  //       isAvailable: !unavailableList.some((unav) => unav.id === item.foodId),
+  //     }))
+  //   );
+  // };
+
+
+  if (!isHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-[65vh]"><Spinner loading={!isHydrated} message="Loading Cart..."/></div>
+      <div className="flex items-center justify-center min-h-[65vh]"><Spinner loading={!isHydrated} message="Loading Cart..." /></div>
     )
   }
 

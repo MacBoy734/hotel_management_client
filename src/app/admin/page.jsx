@@ -66,7 +66,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 md:p-6">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Dashboard</h1>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-8">
@@ -128,7 +128,7 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md mt-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4 md:text-center my-5">Sales Overview. visualize your sales</h2>
         {
           loading ? (

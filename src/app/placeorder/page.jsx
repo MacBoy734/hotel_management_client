@@ -14,11 +14,9 @@ const placeOrderPage = () => {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    address: "",
-    city: "",
-    postalCode: "",
+    name: user?.username || "",
+    phone: user?.phone || "",
+    email: user?.email || "",
     paymentMethod: "Credit Card"
   });
   const [isHydrated, setIsHydrated] = useState(false)
@@ -48,7 +46,7 @@ const placeOrderPage = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/products/checkout`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -65,14 +63,6 @@ const placeOrderPage = () => {
         toast.error(error)
         return
       }
-      setFormData({
-        name: "",
-        email: "",
-        address: "",
-        city: "",
-        postalCode: "",
-        paymentMethod: "Credit Card"
-      })
       router.push('/')
       toast.success('order completed!')
     } catch (error) {
@@ -84,7 +74,7 @@ const placeOrderPage = () => {
 
   if (!isHydrated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[20vh] w-full">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
         <PulseLoader color="#36d7b7" size={20} margin={5} />
         <p className="mt-4 text-xl font-bold text-black">Loading....</p>
       </div>
@@ -120,6 +110,23 @@ const placeOrderPage = () => {
 
           <div className="mb-6">
             <label
+              htmlFor="phone"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Phone Number
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div className="mb-6">
+            <label
               htmlFor="email"
               className="block text-gray-700 font-medium mb-2"
             >
@@ -130,61 +137,6 @@ const placeOrderPage = () => {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Shipping Address */}
-          <div className="mb-6">
-            <label
-              htmlFor="address"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Shipping Address
-            </label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label
-              htmlFor="city"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              City
-            </label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              required
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label
-              htmlFor="postalCode"
-              className="block text-gray-700 font-medium mb-2"
-            >
-              Postal Code
-            </label>
-            <input
-              type="text"
-              id="postalCode"
-              name="postalCode"
-              value={formData.postalCode}
               onChange={handleChange}
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -235,7 +187,7 @@ const placeOrderPage = () => {
               disabled={isSubmitting}
               className={`w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting && 'opacity-50'}`}
             >
-              {isSubmitting ? 'Saving order...' : 'Complete Order'}
+              {isSubmitting ? 'Processing Order...' : 'Complete Order'}
             </button>
           </div>
         </form>

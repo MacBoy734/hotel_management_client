@@ -19,7 +19,7 @@ export default function MyOrdersPage() {
     if (status !== "loading" && !isAuthenticated) {
       dispatch(logout)
       toast.error('you need to be logged in!')
-      router.push("/auth/login")
+      router.replace("/auth/login")
     }
   }, [user, status, router])
   useEffect(() => {
@@ -37,8 +37,8 @@ export default function MyOrdersPage() {
           setError(error)
           return
         }
-        const data = await res.json()
-        setOrders(data)
+        const {orderHistory} = await res.json()
+        setOrders(orderHistory)
       } catch (error) {
         console.error(error)
       } finally {
@@ -54,9 +54,9 @@ export default function MyOrdersPage() {
 
       {
         isLoading ? (
-          <div className="flex flex-col items-center justify-center min-h-[20vh] w-full">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
             <PulseLoader color="#36d7b7" size={20} margin={5} />
-            <p className="mt-4 text-xl font-bold text-black">Loading....</p>
+            <p className="mt-4 text-xl font-bold text-black">Loading Orders....</p>
           </div>) : error ? (
             <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
               ⚠️ {error}
@@ -71,16 +71,16 @@ export default function MyOrdersPage() {
                   <div className="flex justify-between items-center mb-2">
                     <h2 className="font-semibold text-lg">Order #{order._id}</h2>
                     <span
-                      className={`px-3 py-1 rounded-full text-sm ${order.OrderStatus === "Delivered"
+                      className={`px-3 py-1 rounded-full text-sm ${order.orderStatus === "Delivered"
                         ? "bg-green-100 text-green-600"
                         : "bg-yellow-100 text-yellow-600"
                         }`}
                     >
-                      {order.OrderStatus}
+                      {order.orderStatus}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500 mb-2">
-                    Placed on: {order.createdAt}
+                    Placed on: {new Date(order.createdAt).toLocaleString()}
                   </p>
                   <ul className="space-y-1 mb-2">
                     {order.items.map((item, index) => (

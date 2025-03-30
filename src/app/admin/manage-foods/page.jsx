@@ -99,7 +99,7 @@ const ManageFoods = () => {
       setFoodPrice(0);
       setFoodQuantity(0);
       setFoodCategory("Breakfast");
-      router.push('/admin')
+      router.push('/admin/manage-foods')
     } catch (error) {
       toast.error("An error occurred while uploading Food details.");
     } finally {

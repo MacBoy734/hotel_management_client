@@ -87,7 +87,7 @@ const ManageOrders = () => {
                 const { error } = await response.json()
                 if (response.status === 403) {
                     dispatch(logout())
-                    router.replace('/auth/login')
+                    router.replace('/unauthorized')
                     toast.error(error)
                     return
                 }
@@ -100,7 +100,7 @@ const ManageOrders = () => {
             setPaymentStatus('')
             setOrderStatus('')
             setCurrentId('')
-            toast.success('offer updated')
+            toast.success('order updated')
             setIsModalOpen(false);
         } catch (error) {
             toast.error(error.message)
@@ -117,7 +117,7 @@ const ManageOrders = () => {
                     const { error } = await response.json()
                     if (response.status === 403) {
                         dispatch(logout())
-                        router.replace('/auth/login')
+                        router.replace('/unauthorized')
                         toast.error(error)
                         return
                     }
@@ -157,10 +157,7 @@ const ManageOrders = () => {
                                         <p className="text-md">Total: ${order.totalAmount}</p>
                                         <p className="text-md">User Id: {order.user._id}</p>
                                         <p className="text-md text-gray-600">Order Id: {order._id}</p>
-                                        <p className="text-md text-gray-600">Shipping Address: {order.shippingAddress}</p>
-                                        <p className="text-md text-gray-600">City Of Delivery: {order.city}</p>
                                         <p className="text-md text-gray-600">Payment Method: {order.paymentMethod}</p>
-                                        <p className="text-md text-gray-600">Postal Code: {order.postalCode}</p>
                                         <p className="text-md text-gray-600">Created At: {new Date(order.createdAt).toLocaleString()}</p>
                                         <p className="text-md">
                                             Payment Status: <span className="font-medium">{order.paymentStatus}</span>
@@ -174,7 +171,7 @@ const ManageOrders = () => {
                                             <p className="text-lg font-semibold">Items Ordered:</p>
                                             <ul className="list-disc list-inside text-gray-700">
                                                 {order.items.map((item, index) => (
-                                                    <li key={index} className="ml-4"><Link href={`/products/${item.product}`} className="text-blue-600">{item.name}</Link> - {item.quantity}</li>
+                                                    <li key={index} className="ml-4"><Link href={`/foods/${item.product}`} className="text-blue-600">{item.name}</Link> - {item.quantity}</li>
                                                 ))}
                                             </ul>
                                         </div>
@@ -237,7 +234,6 @@ const ManageOrders = () => {
                                 }
                             >
                                 <option value="Pending">Pending</option>
-                                <option value="Shipped">Shipped</option>
                                 <option value="Delivered">Delivered</option>
                             </select>
                         </div>

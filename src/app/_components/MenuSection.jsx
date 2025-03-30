@@ -13,6 +13,7 @@ const MenuSection = () => {
     const [error, setError] = useState("")
 
     useEffect(() => {
+        console.log("Server url is: ", process.env.NEXT_PUBLIC_SERVER_URL)
         const fetchFoods = async () => {
             try {
                 const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods`);
@@ -94,10 +95,10 @@ const MenuSection = () => {
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
                                 foods.filter(food => food.category === "Breakfast").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
-                                    <div key={food?._id}>
+                                    <div key={food?._id} className='bg-gray-300 p-3 rounded-lg'>
                                         <div className='flex items-center justify-between px-5' >
                                             <div className='flex gap-3 items-center'>
-                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <img src={food.images[0].url} alt={food.name} className='size-32 rounded-md' />
                                                 <p>{food.name}</p>
                                             </div>
                                             <small>{food.price}</small>
@@ -130,10 +131,10 @@ const MenuSection = () => {
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
                                 foods.filter(food => food.category === "Lunch").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
-                                    <div key={food?._id}>
+                                    <div key={food?._id} className='bg-gray-300 p-3 rounded-lg'>
                                         <div className='flex items-center justify-between px-5' >
                                             <div className='flex gap-3 items-center'>
-                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <img src={food.images[0].url} alt={food.name} className='size-32 rounded-md' />
                                                 <p>{food.name}</p>
                                             </div>
                                             <small>{food.price}</small>
@@ -166,10 +167,10 @@ const MenuSection = () => {
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
                                 foods.filter(food => food.category === "Dinner").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
-                                    <div key={food?._id}>
+                                    <div key={food?._id} className='bg-gray-300 p-3 rounded-lg'>
                                         <div className='flex items-center justify-between px-5' >
                                             <div className='flex gap-3 items-center'>
-                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <img src={food.images[0].url} alt={food.name} className='size-32 rounded-md' />
                                                 <p>{food.name}</p>
                                             </div>
                                             <small>{food.price}</small>
@@ -202,10 +203,10 @@ const MenuSection = () => {
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
                                 foods.filter(food => food.category === "Drinks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
-                                    <div key={food?._id}>
+                                    <div key={food?._id} className='bg-gray-300 p-3 rounded-lg'>
                                         <div className='flex items-center justify-between px-5' >
                                             <div className='flex gap-3 items-center'>
-                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <img src={food.images[0].url} alt={food.name} className='size-32 rounded-md' />
                                                 <p>{food.name}</p>
                                             </div>
                                             <small>{food.price}</small>
@@ -238,10 +239,10 @@ const MenuSection = () => {
                         <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
                             {
                                 foods.filter(food => food.category === "Snacks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
-                                    <div key={food?._id}>
+                                    <div key={food?._id} className='bg-gray-300 p-3 rounded-lg'>
                                         <div className='flex items-center justify-between px-5' >
                                             <div className='flex gap-3 items-center'>
-                                                <img src={food.images[0].url} alt={food.name} className='size-32' />
+                                                <img src={food.images[0].url} alt={food.name} className='size-32 rounded-md' />
                                                 <p>{food.name}</p>
                                             </div>
                                             <small>{food.price}</small>

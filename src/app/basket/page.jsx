@@ -1,6 +1,7 @@
 "use client"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
 import { removeFromCart, incrementQuantity, decrementQuantity } from "../../slices/cartSlice"
 import Link from "next/link"
 import Spinner from "../_components/Spinner"
@@ -8,48 +9,45 @@ import { toast } from "react-toastify"
 
 const CartPage = () => {
   const cart = useSelector((state) => state.cart)
+  const router = useRouter()
   const dispatch = useDispatch()
+  const [unavailableItems, setUnavailableItems] = useState([])
   const [isHydrated, setIsHydrated] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   useEffect(() => {
     setIsHydrated(true)
-    console.log(cart)
+    console.log(typeof cart.cartItems)
   }, [])
 
-  // const checkAvailability = async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods/validatecart`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ items: cart.cartItems }),
-  //     });
+  const checkAvailability = async () => {
+    try {
+      if (!cart.cartItems) return
+      setIsProcessing(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods/validatecart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: cart?.cartItems }),
+      });
 
-  //     const data = await response.json();
-  //     if (!response.ok) {
-  //       const {error} =await response.json()
-  //       if(error){
-  //         toast.error(error)
-  //         return
-  //       }
-  //       updateCartAvailability(data.unavailableItems);
-  //       return false;
-  //     }
-
-  //     return true;
-  //   } catch (error) {
-  //     alert("Error checking availability");
-  //     return false;
-  //   }
-  // };
-
-  // Update cart items with new availability status
-  // const updateCartAvailability = (unavailableList) => {
-  //   setCartItems((prevCart) =>
-  //     prevCart.map((item) => ({
-  //       ...item,
-  //       isAvailable: !unavailableList.some((unav) => unav.id === item.foodId),
-  //     }))
-  //   );
-  // };
+      if (!response.ok) {
+        const data = await response.json()
+        if (data.error) {
+          toast.error(error)
+          return
+        }
+        setUnavailableItems(data.unavailableItems);
+        return;
+      }
+      if (response.ok) {
+        router.push('/placeorder')
+      }
+    } catch (error) {
+      console.log(error.message)
+      toast.error("Error checking availability")
+    } finally {
+      setIsProcessing(false)
+    }
+  };
 
 
   if (!isHydrated) {
@@ -72,6 +70,20 @@ const CartPage = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="col-span-2 space-y-6 md:row-span-2">
+            {
+              unavailableItems.length > 0 && (
+                <div className="my-6">
+                  <p className="text-red-500 font-semibold">please remove the following items from your basket before proceeding!</p>
+                  <ul>
+                    {
+                      unavailableItems.map((item, index) => (
+                        <li key={index} className="text-lg ml-5">- {item.name}</li>
+                      ))
+                    }
+                  </ul>
+                </div>
+              )
+            }
             {cart.cartItems?.map((item) => (
               <div
                 key={item.id}
@@ -124,12 +136,13 @@ const CartPage = () => {
                 <span>{cart.totalQuantity}</span>
               </div>
             </div>
-            <Link
-              className="mt-6 w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-              href={'/placeorder'}
+            <button
+              className={`mt-6 w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 ${isProcessing && 'opacity-30'}`}
+              onClick={checkAvailability}
+              disabled={isProcessing}
             >
-              Proceed to Checkout
-            </Link>
+              {isProcessing ? 'Processing...' : 'Proceed to Checkout'}
+            </button>
           </div>
         </div>
       )}

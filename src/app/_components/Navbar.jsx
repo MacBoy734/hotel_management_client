@@ -58,7 +58,7 @@ export default function Navbar() {
   const handleLogOut = async () => {
     await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/logout`, { credentials: 'include' })
     dispatch(logout())
-    return router.push('/auth/login')
+    return router.replace('/auth/login')
   }
 
   return (

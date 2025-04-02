@@ -13,11 +13,12 @@ const placeOrderPage = () => {
   const { user, status, isAuthenticated } = useSelector((state) => state.auth)
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [unavailableItems, setUnavailableItems] = useState([])
   const [formData, setFormData] = useState({
     name: user?.username || "",
     phone: user?.phone || "",
     email: user?.email || "",
-    paymentMethod: "Credit Card"
+    paymentMethod: "M-Pesa"
   });
   const [isHydrated, setIsHydrated] = useState(false)
   useEffect(() => {
@@ -45,6 +46,10 @@ const placeOrderPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if(formData.items.length === 0){
+        toast.error("your Basket cannot be empty!")
+        return
+      }
       setIsSubmitting(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods/checkout`, {
         method: "POST",
@@ -53,12 +58,15 @@ const placeOrderPage = () => {
         credentials: 'include'
       })
       if (!response.ok) {
-        const { error } = await response.json()
+        const { error, unavailableItems } = await response.json()
         if (response.status === 403) {
           dispatch(logout())
           router.replace('/auth/login')
           toast.error(error)
           return
+        }
+        if(unavailableItems.length > 0){
+          setUnavailableItems(unavailableItems)
         }
         toast.error(error)
         return
@@ -82,11 +90,25 @@ const placeOrderPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-4 mt-16">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-8">
         <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">
           Checkout
         </h1>
+        {
+              unavailableItems.length > 0 && (
+                <div className="my-6">
+                  <p className="text-red-500 font-semibold">please fix the following items in your basket before proceeding! Remove all items in this list from the basket, go to the menu page and add them again if they are available.</p>
+                  <ul>
+                    {
+                      unavailableItems.map((item, index) => (
+                        <li key={index} className="text-lg ml-5">- {item.name} -- {item.reason}</li>
+                      ))
+                    }
+                  </ul>
+                </div>
+              )
+            }
 
         <form onSubmit={handleSubmit}>
           {/* Personal Information */}
@@ -156,10 +178,6 @@ const placeOrderPage = () => {
                 <p className="text-sm text-gray-600">${item.price.toFixed(2)}</p>
               </div>
             ))}
-            <div className="flex items-center justify-between p-4">
-              <p className="text-lg text-black">Shipping</p>
-              <p className="text-sm text-gray-600">$5.00</p>
-            </div>
             <div className="flex justify-between font-bold text-black p-4">
               <p>Total</p>
               <p>==</p>
@@ -176,7 +194,7 @@ const placeOrderPage = () => {
               required
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             >
-              <option value="creditCard">Credit Card</option>
+              <option value="M-Pesa">M-Pesa</option>
             </select>
           </div>
 

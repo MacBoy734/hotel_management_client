@@ -2,10 +2,11 @@
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
-import { removeFromCart, incrementQuantity, decrementQuantity } from "../../slices/cartSlice"
+import { removeFromCart, incrementQuantity, decrementQuantity, editCartItems} from "../../slices/cartSlice"
 import Link from "next/link"
 import Spinner from "../_components/Spinner"
 import { toast } from "react-toastify"
+import io from 'socket.io-client'
 
 const CartPage = () => {
   const cart = useSelector((state) => state.cart)
@@ -14,10 +15,31 @@ const CartPage = () => {
   const [unavailableItems, setUnavailableItems] = useState([])
   const [isHydrated, setIsHydrated] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
+  const socket = io(`${process.env.NEXT_PUBLIC_SERVER_URL}`)
   useEffect(() => {
     setIsHydrated(true)
-    console.log(typeof cart.cartItems)
   }, [])
+
+
+  useEffect(() => {
+    // Function to handle socket updates
+    const handleFoodUpdate = (data) => {
+      const isInCart = cart?.cartItems.some(item => item.id === data.food._id)
+      if (data.action === "edit") {
+        if (isInCart) {
+          dispatch(editCartItems(data.food))
+        }
+      }
+    };
+
+    // Subscribe to socket events
+    socket.on("foodUpdated", handleFoodUpdate);
+
+    // Cleanup function to remove listener when component unmounts
+    return () => {
+      socket.off("foodUpdated", handleFoodUpdate);
+    };
+  }, []);
 
   const checkAvailability = async () => {
     try {
@@ -43,7 +65,7 @@ const CartPage = () => {
       }
     } catch (error) {
       console.log(error.message)
-      toast.error("Error checking availability")
+      toast.error("Error validating cart items!")
     } finally {
       setIsProcessing(false)
     }
@@ -57,13 +79,13 @@ const CartPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 min-h-[80vh] bg-black text-white">
-      <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+    <div className="p-6 min-h-[80vh] bg-black text-white">
+      <h1 className="text-3xl font-bold my-6">Shopping Basket</h1>
 
       {isHydrated && cart.cartItems?.length === 0 ? (
-        <div className="text-center mt-10">
-          <p className="text-lg">Your Basket is currently empty.</p>
-          <Link href="/products" className="text-blue-600 underline mt-4">
+        <div className="text-center mt-20">
+          <p className="text-lg font-bold font-montserrat">Your Basket is currently empty.</p>
+          <Link href="/menu" className="text-blue-600 underline mt-4">
             Continue Navigating
           </Link>
         </div>
@@ -73,11 +95,11 @@ const CartPage = () => {
             {
               unavailableItems.length > 0 && (
                 <div className="my-6">
-                  <p className="text-red-500 font-semibold">please remove the following items from your basket before proceeding!</p>
+                  <p className="text-red-500 font-semibold">please fix the following items in your basket before proceeding! Remove all items in this list from the basket, go to the menu page and add them again if they are available.</p>
                   <ul>
                     {
                       unavailableItems.map((item, index) => (
-                        <li key={index} className="text-lg ml-5">- {item.name}</li>
+                        <li key={index} className="text-lg ml-5">- {item.name} -- {item.reason}</li>
                       ))
                     }
                   </ul>

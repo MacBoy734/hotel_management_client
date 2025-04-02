@@ -19,7 +19,7 @@ export default function EditProduct() {
     useEffect(() => {
         if (status !== "loading" && (!user || !user.isAdmin)) {
             dispatch(logout())
-            router.push("/unauthorized")
+            router.replace("/unauthorized")
         }
     }, [user, status, router])
 

@@ -6,7 +6,7 @@ const Hero = () => {
     backgroundColor: 'rgb(25, 42, 92)'
   }
   return (
-    <section className="relative md:h-screen h-[65vh] bg-cover bg-center bg-fixed bg-blend-multiply flex items-center justify-center text-white text-center px-6 md:px-12 bg-[url('/images/image_8.jpg')]" style={styles}>
+    <section className="relative md:h-[90vh] h-[65vh] bg-cover bg-center bg-fixed bg-blend-multiply flex items-center justify-center text-white text-center px-6 md:px-12 bg-[url('/images/image_8.jpg')]" style={styles}>
       <div className="absolute"></div>
       <div className="relative max-w-2xl">
         <h1 className="text-3xl md:text-5xl font-bold">Your Favourite Food Served Hot and Fresh!</h1>

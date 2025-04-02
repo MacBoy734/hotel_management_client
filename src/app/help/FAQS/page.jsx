@@ -18,7 +18,7 @@ export default function HelpPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6 text-black">
+    <div className="mx-auto md:p-6 p-3 space-y-6 text-black">
       <h1 className="text-3xl font-bold text-center">Help & Support</h1>
       
       {/* FAQ Section */}

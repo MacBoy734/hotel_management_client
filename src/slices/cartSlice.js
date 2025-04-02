@@ -40,15 +40,36 @@ const cartSlice = createSlice({
       }
     },
 
+    editCartItems: (state, action) => {
+      const updatedItem = action.payload;
+
+      if (updatedItem) {
+        const cartItem = state.cartItems.find(item => item.id === updatedItem._id);
+
+        if (cartItem) {
+          state.cartItems = state.cartItems.map(item =>
+            item.id === updatedItem._id
+              ? {
+                ...item,
+                price: updatedItem.price,
+                totalQuantity: updatedItem.quantity 
+              }
+              : item
+          )
+          state.totalPrice = state.cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+        }
+      }
+    },
+
     incrementQuantity: (state, action) => {
       const itemId = action.payload
       const item = state.cartItems.find(cartItem => cartItem.id === itemId)
 
       if (item) {
-        if(item.quantity >= item.totalQuantity) {
+        if (item.quantity >= item.totalQuantity) {
           toast.error('item out of stock!')
           return
-        }else{
+        } else {
           item.quantity++
           state.totalQuantity++
           state.totalPrice += item.price
@@ -61,7 +82,7 @@ const cartSlice = createSlice({
       const item = state.cartItems.find(cartItem => cartItem.id === itemId)
 
       if (item) {
-        if(item.quantity == 1) return
+        if (item.quantity == 1) return
         item.quantity--
         state.totalQuantity--
         state.totalPrice -= item.price
@@ -76,6 +97,6 @@ const cartSlice = createSlice({
   },
 })
 
-export const { addToCart, removeFromCart, incrementQuantity, decrementQuantity, clearCart } = cartSlice.actions
+export const { addToCart, removeFromCart, incrementQuantity, decrementQuantity, clearCart, editCartItems } = cartSlice.actions
 
 export default cartSlice.reducer

@@ -13,10 +13,10 @@ export default function RootLayout({ children }) {
     <Provider store={store}>
       <html lang="en">
         <body
-         className={`flex flex-col min-h-screen font-[roboto]`}
+         className={`flex flex-col min-h-screen font-[roboto] overflow-x-hidden`}
         >
           <Navbar />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow mt-16">{children}</main>
           <Footer />
           <ToastContainer />
         </body>

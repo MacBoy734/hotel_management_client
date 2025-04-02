@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../slices/authSlice'
 import { useRouter } from 'next/navigation'
 import { CiUser } from "react-icons/ci";
-import { RiArrowDropDownLine } from "react-icons/ri";
+import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
 import { IoIosHelpCircleOutline, IoIosMenu, IoMdClose } from "react-icons/io";
 import { GiShoppingCart } from "react-icons/gi";
 import { useState, useEffect, useRef } from "react";
@@ -18,6 +18,7 @@ export default function Navbar() {
   const [accountDropdown, setAccountDropdown] = useState(false);
   const [helpDropdown, setHelpDropdown] = useState(false);
   const [query, setQuery] = useState("");
+  const [isHydrated, setIsHydrated] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -45,6 +46,7 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    setIsHydrated(true)
     // Add event listener for clicks outside
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -62,7 +64,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-gray-800 text-white p-4">
+    <nav className="bg-gray-800 text-white p-4 fixed w-full left-0 top-0 z-40"> 
       <section>
         <div className="md:flex hidden items-center justify-around gap-3">
           <Link href="/" className="text-white text-2xl hover:text-sky-500">Eatery</Link>
@@ -74,7 +76,7 @@ export default function Navbar() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button className="p-2 text-lg text-white bg-black rounded-md" type="submit">
+            <button className="p-2 text-lg text-white bg-black rounded-md hover:bg-white hover:text-black transition-all duration-100 ease-in" type="submit">
               Search
             </button>
           </form>
@@ -83,7 +85,8 @@ export default function Navbar() {
             <div className="flex items-center space-x-1" onClick={() => setAccountDropdown(!accountDropdown)}>
               <CiUser className="size-6" />
               <h4 className="text-md">Account</h4>
-              <RiArrowDropDownLine className="size-6" />
+              {accountDropdown ? <RiArrowDropUpLine className="size-6" /> : <RiArrowDropDownLine className="size-6" />}
+              
             </div>
             {accountDropdown && (
               <div className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-md w-40 cursor-pointer z-20">
@@ -113,7 +116,8 @@ export default function Navbar() {
             <div className="flex items-center space-x-1 cursor-pointer" onClick={() => setHelpDropdown(!helpDropdown)}>
               <IoIosHelpCircleOutline className="size-6" />
               <h4 className="text-md">Help</h4>
-              <RiArrowDropDownLine className="size-6" />
+              {helpDropdown ? <RiArrowDropUpLine className="size-6" /> : <RiArrowDropDownLine className="size-6" />}
+              
             </div>
             {helpDropdown && (
               <div className="absolute left-0 mt-2 bg-white text-black shadow-md rounded-md w-40 cursor-pointer z-20">
@@ -129,7 +133,7 @@ export default function Navbar() {
           <div>
             <Link href="/basket" className="flex items-center space-x-1">
               <GiShoppingCart className="size-6" />
-              <h4 className="text-md">Basket <sup className={`text-red-600 text-lg font-normal`}>{cartItems?.length || 0}</sup></h4>
+              <h4 className="text-md">Basket {isHydrated && <sup className={` text-lg font-normal ${cartItems?.length <= 0 ? 'text-red-600' : 'text-green-500'}`}>{cartItems?.length || 0}</sup>}</h4>
             </Link>
           </div>
         </div>
@@ -170,7 +174,7 @@ export default function Navbar() {
 
       {/* Mobile Menu (Only visible when menuOpen is true) */}
       {menuOpen && (
-        <div className={`md:hidden flex flex-col gap-11 bg-gray-900 p-4 rounded-md shadow-lg h-screen fixed left-0 top-0 w-3/4 z-50`}>
+        <div className={`md:hidden flex flex-col gap-11 bg-gray-800 p-4 rounded-md shadow-lg h-screen fixed left-0 top-0 w-3/4 z-50`}>
           <div className="absolute right-6 font-bold">
             <IoMdClose className="text-4xl font-bold size-6 text-white" onClick={() => setMenuOpen(false)} />
           </div>
@@ -182,23 +186,23 @@ export default function Navbar() {
                 <li className="px-4 py-2"><Link href="/users/orders" onClick={() => setMenuOpen(false)} >Orders</Link></li>
                 {
                   user.isAdmin && (
-                    <li className="px-4 py-2"><Link href="/admin">dashboard</Link></li>
+                    <li className="px-4 py-2"><Link href="/admin" onClick={() => setMenuOpen(false)}>dashboard</Link></li>
                   )
                 }
-                <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket ({cartItems?.length || 0})</Link></li>
+                <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket {isHydrated && <span className={` ml-3 text-lg font-normal ${cartItems?.length <= 0 ? 'text-red-600' : 'text-green-500'}`}>({cartItems?.length || 0})</span>}</Link></li>
                 <li className="px-4 py-2"><Link href="/help" onClick={() => setMenuOpen(false)}>Help</Link></li>
                 <li className="px-4 py-2"><Link href="/help/FAQS" onClick={() => setMenuOpen(false)}>FAQS</Link></li>
-                <li className="px-4 py-2"><Link href="/help/contact-support">Contact Support</Link></li>
+                <li className="px-4 py-2"><Link href="/help/contact-support" onClick={() => setMenuOpen(false)}>Contact Support</Link></li>
                 <li className="px-4 py-2 text-red-500"><button onClick={() => {handleLogOut(); setMenuOpen(false);}}>Logout</button></li>
               </ul>
             ) : (
               <ul className="py-2">
-                <li className="px-4 py-2"><Link href="/auth/login">Login</Link></li>
-                <li className="px-4 py-2"><Link href="/auth/register">Register</Link></li>
-                <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket ({cartItems?.length || 0})</Link></li>
+                <li className="px-4 py-2"><Link href="/auth/login" onClick={() => setMenuOpen(false)}>Login</Link></li>
+                <li className="px-4 py-2"><Link href="/auth/register" onClick={() => setMenuOpen(false)}>Register</Link></li>
+                <li className="px-4 py-2"><Link href="/basket" onClick={() => setMenuOpen(false)}>Basket {isHydrated && <span className={` ml-3 text-lg font-normal ${cartItems?.length <= 0 ? 'text-red-600' : 'text-green-500'}`}>({cartItems?.length || 0})</span>}</Link></li>
                 <li className="px-4 py-2"><Link href="/help" onClick={() => setMenuOpen(false)}>Help</Link></li>
                 <li className="px-4 py-2"><Link href="/help/FAQS" onClick={() => setMenuOpen(false)}>FAQS</Link></li>
-                <li className="px-4 py-2"><Link href="/help/contact-support">Contact Support</Link></li>
+                <li className="px-4 py-2"><Link href="/help/contact-support" onClick={() => setMenuOpen(false)}>Contact Support</Link></li>
               </ul>
             )}
 

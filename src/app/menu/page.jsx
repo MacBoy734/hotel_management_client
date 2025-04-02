@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import io from 'socket.io-client'
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, incrementQuantity, decrementQuantity } from '../../slices/cartSlice';
+import { addToCart, incrementQuantity, decrementQuantity, removeFromCart } from '../../slices/cartSlice';
 import { PulseLoader } from 'react-spinners'
+import Link from 'next/link'
 
 const menuItems = [
   { id: 1, name: "Grilled Chicken", category: "Lunch", price: "$8", image: "/chicken.jpg" },
@@ -17,15 +18,17 @@ const categories = ["Breakfast", "Lunch", "Dinner", "Drinks", "Snacks"];
 
 export default function MenuPage() {
   const dispatch = useDispatch()
-  const { cartItems } = useSelector((state) => state.cart)
+  const cart = useSelector((state) => state.cart)
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
   const [foods, setFoods] = useState([]);
+  const [isHydrated, setIsHydrated] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   const socket = io(`${process.env.NEXT_PUBLIC_SERVER_URL}`)
-  
+
   useEffect(() => {
+    setIsHydrated(true)
     const fetchFoods = async () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/foods`);
@@ -97,14 +100,14 @@ export default function MenuPage() {
       </h1>
 
       <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 mb-8">
-        <div className="flex flex-wrap gap-3 justify-center">
+        <div className="flex flex-wrap gap-4 md:justify-center">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
               className={`px-5 py-2 rounded-lg text-lg font-medium transition duration-300 ${selectedCategory === cat
-                  ? "bg-blue-600 text-white shadow-lg"
-                  : "bg-gray-200 hover:bg-gray-300"
+                ? "bg-blue-600 text-white shadow-lg"
+                : "bg-gray-200 hover:bg-gray-300"
                 }`}
             >
               {cat}
@@ -132,22 +135,60 @@ export default function MenuPage() {
       ) : filteredItems.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {filteredItems.filter(item => item.isAvailable === true).map((item) => (
-            <div
+            <Link
               key={item._id}
+              href={`/menu/${item._id}`}
               className="overflow-hidden rounded-lg shadow-lg bg-white transform transition duration-300 hover:scale-105"
             >
               <img src={item.images[0].url} alt={item.name} className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-gray-800">{item.name}</h2>
-                <p className="text-gray-600 text-lg mt-1">{item.category}</p>
+                <p className="text-gray-600 text-lg mt-1">Category: {item.category}</p>
                 <div className="flex justify-between items-center mt-4">
                   <span className="text-xl font-bold text-blue-600">${item.price}</span>
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition" onClick={() => handleAddToBasket(item)}>
-                    Add to Basket
-                  </button>
                 </div>
+                {
+                  isHydrated && (
+                    <div className='flex items-center py-1 justify-center mt-6'>
+                      {cart?.cartItems.some(cartItem => cartItem.id === item._id) ? (
+                        <div className='flex flex-col gap-3'>
+                          <div className="flex items-center gap-2 ml-12">
+                            <button
+                              onClick={(e) => {e.preventDefault(); dispatch(decrementQuantity(item._id))}}
+                              className="px-3 py-1 bg-gray-400 rounded hover:bg-gray-500 text-black text-md"
+                            >
+                              -
+                            </button>
+                            <span className="text-black text-md font-semibold">{cart?.cartItems.find(cartItem => cartItem.id === item._id).quantity}</span>
+                            <button
+                              onClick={(e) => {e.preventDefault(); dispatch(incrementQuantity(item._id))}}
+                              className="px-3 py-1 bg-gray-400 rounded hover:bg-gray-500 text-black text-md"
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div>
+                            <button
+                              onClick={(e) => {e.preventDefault(); dispatch(removeFromCart(item._id))}}
+                              className="text-white w-full px-3 py-2 bg-red-600 rounded-lg text-lg mt-3"
+                            >
+                              Remove From Basket
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
+                          onClick={(e) => {e.preventDefault(); handleAddToBasket(item)}}
+                        >
+                          Add To Basket
+                        </button>
+                      )}
+                    </div>
+                  )
+                }
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (

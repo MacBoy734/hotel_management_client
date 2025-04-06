@@ -28,7 +28,20 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    function isValidEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+    function isValidPhone(phone) {
+      const regex = /^(?:\+254|254|0)?7\d{8}$/;
+      return regex.test(phone);
+    }
+    
     if (!username || !password || !email || !phone) return toast.error('Please enter all details!')
+    if(!isValidEmail(email) || !isValidPhone(phone)){
+      toast.error("in valid Email or phone number!")
+      return
+    }
     setIsSending(true)
     const credentials = { username, password, email, phone }
     try {
@@ -43,7 +56,7 @@ const Register = () => {
 
   useEffect(() => {
     if (status === 'succeeded' && isAuthenticated) {
-      router.push('/products')
+      router.push('/menu')
     }
   }, [status, isAuthenticated])
 
@@ -127,7 +140,7 @@ const Register = () => {
           disabled={sending}
           className={`w-full bg-teal-500 text-white p-2 rounded hover:bg-teal-600 transition ${sending ? 'opacity-50' : ''}`}
         >
-          Register
+          {sending ? 'Processing...' : 'Register'}
         </button>
         <p className='mt-5 text-black'>
           Already have an account? <Link href='/auth/login' className='text-blue-700'>Login</Link>

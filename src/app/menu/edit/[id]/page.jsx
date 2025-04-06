@@ -4,16 +4,17 @@ import { useRouter, useParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux"
 import { logout } from "../../../../slices/authSlice"
 import { toast } from "react-toastify";
+import { PulseLoader } from "react-spinners";
 
 export default function EditProduct() {
     const { user, status } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
     const { id } = useParams();
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(true)
     const [product, setProduct] = useState(null);
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [error, setError] = useState('Something went wrong')
     const [isSavingProduct, setIsSavingProduct] = useState(false);
-    const [offers, setOffers] = useState([])
 
     const categories = ["Breakfast", "Lunch", "Dinner", "Drinks", "Snacks"];
     useEffect(() => {
@@ -38,13 +39,15 @@ export default function EditProduct() {
                         toast.error(error)
                         return
                     }
-                    toast.error(error)
+                    setError(error)
                     return
                 }
                 setProduct(data);
             } catch (err) {
                 toast.error(err.message);
                 router.push("/admin");
+            }finally{
+                setIsLoading(false)
             }
         }
         fetchProduct()
@@ -78,18 +81,18 @@ export default function EditProduct() {
 
             if (!response.ok) {
                 const { error } = await response.json()
-                if(response.status === 403){
-                  dispatch(logout())
-                  router.replace('/auth/login')
-                  toast.error(error)
-                  return
+                if (response.status === 403) {
+                    dispatch(logout())
+                    router.replace('/auth/login')
+                    toast.error(error)
+                    return
                 }
                 toast.error(error)
                 return
-              }
+            }
 
             toast.success("Product updated successfully!");
-            router.push("/menu")
+            router.push("/admin/manage-foods")
         } catch (error) {
             toast.error(error.message);
         } finally {
@@ -97,7 +100,22 @@ export default function EditProduct() {
         }
     };
 
-    if (!product) return <p className="text-center mt-10">Loading...</p>;
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
+                <PulseLoader color="#36d7b7" size={20} margin={5} />
+                <p className="mt-4 text-xl font-bold text-black">Loading....</p>
+            </div>
+        )
+    }
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] w-full">
+                <p className="mt-4 text-xl font-bold text-red-500">{error}</p>
+            </div>
+        )
+    }
+
 
     return (
         <div className="max-w-3xl mx-auto bg-white p-6 shadow-lg rounded-lg my-10 text-black">

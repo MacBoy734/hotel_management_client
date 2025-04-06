@@ -17,7 +17,7 @@ export default function MyOrdersPage() {
 
   useEffect(() => {
     if (status !== "loading" && !isAuthenticated) {
-      dispatch(logout)
+      dispatch(logout())
       toast.error('you need to be logged in!')
       router.replace("/auth/login")
     }

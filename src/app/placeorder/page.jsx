@@ -24,7 +24,7 @@ const placeOrderPage = () => {
   useEffect(() => {
     if (status !== "loading" && !isAuthenticated) {
       toast.error('you need to be logged in!')
-      router.push("/auth/login")
+      router.replace("/auth/login")
     }
   }, [user, status, router])
   useEffect(() => {
@@ -71,7 +71,7 @@ const placeOrderPage = () => {
         toast.error(error)
         return
       }
-      router.push('/')
+      router.push('/users/orders')
       toast.success('order completed!')
     } catch (error) {
       toast.error(error.message)

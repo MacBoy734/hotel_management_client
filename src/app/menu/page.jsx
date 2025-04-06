@@ -14,7 +14,7 @@ const menuItems = [
   { id: 5, name: "Coffee", category: "Drinks", price: "$2", image: "/coffee.jpg" },
 ];
 
-const categories = ["Breakfast", "Lunch", "Dinner", "Drinks", "Snacks"];
+const categories = ["All", "Breakfast", "Lunch", "Dinner", "Drinks", "Snacks"];
 
 export default function MenuPage() {
   const dispatch = useDispatch()
@@ -40,7 +40,7 @@ export default function MenuPage() {
         const data = await res.json();
         setFoods(data);
       } catch (err) {
-        setError("Failed to fetch foods");
+        setError("Failed to fetch Foods!");
       } finally {
         setIsLoading(false)
       }
@@ -93,6 +93,24 @@ export default function MenuPage() {
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const [imageIndexes, setImageIndexes] = useState({});
+
+  useEffect(() => {
+    const intervals = filteredItems.map((food) => {
+      if (food.images.length > 1 && food.isAvailable) {
+        return setInterval(() => {
+          setImageIndexes((prevIndexes) => ({
+            ...prevIndexes,
+            [food._id]: prevIndexes[food._id] === food.images.length - 1 ? 0 : (prevIndexes[food._id] || 0) + 1,
+          }));
+        }, 4000);
+      }
+      return null;
+    });
+
+    return () => intervals.forEach((interval) => interval && clearInterval(interval)); // Cleanup intervals
+  }, [filteredItems])
+
   return (
     <div className="mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
@@ -140,7 +158,7 @@ export default function MenuPage() {
               href={`/menu/${item._id}`}
               className="overflow-hidden rounded-lg shadow-lg bg-white transform transition duration-300 hover:scale-105"
             >
-              <img src={item.images[0].url} alt={item.name} className="w-full h-48 object-cover" />
+              <img src={item.images[imageIndexes[item._id] || 0]?.url} alt={item.name} className="w-full h-48 object-cover" />
               <div className="p-6">
                 <h2 className="text-2xl font-semibold text-gray-800">{item.name}</h2>
                 <p className="text-gray-600 text-lg mt-1">Category: {item.category}</p>
@@ -154,14 +172,14 @@ export default function MenuPage() {
                         <div className='flex flex-col gap-3'>
                           <div className="flex items-center gap-2 ml-12">
                             <button
-                              onClick={(e) => {e.preventDefault(); dispatch(decrementQuantity(item._id))}}
+                              onClick={(e) => { e.preventDefault(); dispatch(decrementQuantity(item._id)) }}
                               className="px-3 py-1 bg-gray-400 rounded hover:bg-gray-500 text-black text-md"
                             >
                               -
                             </button>
                             <span className="text-black text-md font-semibold">{cart?.cartItems.find(cartItem => cartItem.id === item._id).quantity}</span>
                             <button
-                              onClick={(e) => {e.preventDefault(); dispatch(incrementQuantity(item._id))}}
+                              onClick={(e) => { e.preventDefault(); dispatch(incrementQuantity(item._id)) }}
                               className="px-3 py-1 bg-gray-400 rounded hover:bg-gray-500 text-black text-md"
                             >
                               +
@@ -169,7 +187,7 @@ export default function MenuPage() {
                           </div>
                           <div>
                             <button
-                              onClick={(e) => {e.preventDefault(); dispatch(removeFromCart(item._id))}}
+                              onClick={(e) => { e.preventDefault(); dispatch(removeFromCart(item._id)) }}
                               className="text-white w-full px-3 py-2 bg-red-600 rounded-lg text-lg mt-3"
                             >
                               Remove From Basket
@@ -179,7 +197,7 @@ export default function MenuPage() {
                       ) : (
                         <button
                           className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
-                          onClick={(e) => {e.preventDefault(); handleAddToBasket(item)}}
+                          onClick={(e) => { e.preventDefault(); handleAddToBasket(item) }}
                         >
                           Add To Basket
                         </button>
@@ -192,7 +210,7 @@ export default function MenuPage() {
           ))}
         </div>
       ) : (
-        <p className="text-center col-span-full text-gray-500 text-xl">No items found.</p>
+        <p className="text-center col-span-full text-gray-500 text-xl">No Foods found.</p>
       )}
 
     </div>

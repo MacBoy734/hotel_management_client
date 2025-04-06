@@ -64,6 +64,23 @@ const MenuSection = () => {
             socket.off("foodUpdated", handleFoodUpdate);
         };
     }, []);
+    const [imageIndexes, setImageIndexes] = useState({});
+
+    useEffect(() => {
+      const intervals = foods.map((food) => {
+        if (food.images.length > 1 && food.isAvailable) {
+          return setInterval(() => {
+            setImageIndexes((prevIndexes) => ({
+              ...prevIndexes,
+              [food._id]: prevIndexes[food._id] === food.images.length - 1 ? 0 : (prevIndexes[food._id] || 0) + 1,
+            }));
+          }, 4000); 
+        }
+        return null;
+      });
+  
+      return () => intervals.forEach((interval) => interval && clearInterval(interval)); // Cleanup intervals
+    }, [foods])
 
     const handleAddToBasket = (item) => {
         const food = {
@@ -93,10 +110,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.filter(food => food.category === "Breakfast").length > 0 ? (
-                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
+                    ) : foods.filter(food => food.category === "Breakfast" && food.isAvailable === true).length > 0 ? (
+                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,.5fr)) md:grid-cols-[repeat(auto-fit,minmax(300px,.5fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Breakfast").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                foods.filter(food => food.category === "Breakfast" && food.isAvailable === true).slice(0, 3).map((food) => (
                                     <div
                                         key={food?._id}
                                         className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl"
@@ -105,7 +122,7 @@ const MenuSection = () => {
 
                                         <div className="relative w-full h-52">
                                             <img
-                                                src={food.images[0].url}
+                                                src={food.images[imageIndexes[food._id] || 0]?.url}
                                                 alt={food.name}
                                                 className="w-full h-full object-cover"
                                             />
@@ -166,7 +183,7 @@ const MenuSection = () => {
                             }
                         </div>
                     ) : (
-                        <p className="text-center col-span-full text-gray-500 text-xl my-10">No items found.</p>
+                        <p className="text-center col-span-full text-gray-500 text-xl my-10">There Are No Breakfast Foods Available Right Now.</p>
                     )
                 }
             </div>
@@ -182,10 +199,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.filter(food => food.category === "Lunch").length > 0 ? (
-                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
+                    ) : foods.filter(food => food.category === "Lunch" && food.isAvailable === true).length > 0 ? (
+                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,.5fr)) md:grid-cols-[repeat(auto-fit,minmax(300px,.5fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Lunch").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                foods.filter(food => food.category === "Lunch" && food.isAvailable === true ).slice(0, 3).map((food) => (
                                     <div
                                         key={food?._id}
                                         className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl"
@@ -193,7 +210,7 @@ const MenuSection = () => {
                                         {/* Image Section */}
                                         <div className="relative w-full h-52">
                                             <img
-                                                src={food.images[0].url}
+                                                src={food.images[imageIndexes[food._id] || 0]?.url}
                                                 alt={food.name}
                                                 className="w-full h-full object-cover"
                                             />
@@ -255,7 +272,7 @@ const MenuSection = () => {
                             }
                         </div>
                     ) : (
-                        <p className="text-center col-span-full text-gray-500 text-xl my-10">No items found.</p>
+                        <p className="text-center col-span-full text-gray-500 text-xl my-10">There Are No Lunch Foods Available Right Now.</p>
                     )
                 }
             </div>
@@ -271,10 +288,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.filter(food => food.category === "Dinner").length > 0 ? (
-                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6 px-3'>
+                    ) : foods.filter(food => food.category === "Dinner" && food.isAvailable === true).length > 0 ? (
+                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr)) md:grid-cols-[repeat(auto-fit,minmax(300px,.5fr))] gap-6 md:px-20 py-6 px-3'>
                             {
-                                foods.filter(food => food.category === "Dinner").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                foods.filter(food => food.category === "Dinner" && food.isAvailable === true).slice(0, 3).map((food) => (
                                     <div
                                         key={food?._id}
                                         className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl"
@@ -282,7 +299,7 @@ const MenuSection = () => {
                                         {/* Image Section */}
                                         <div className="relative w-full h-52">
                                             <img
-                                                src={food.images[0].url}
+                                                src={food.images[imageIndexes[food._id] || 0]?.url}
                                                 alt={food.name}
                                                 className="w-full h-full object-cover"
                                             />
@@ -344,7 +361,7 @@ const MenuSection = () => {
                             }
                         </div>
                     ) : (
-                        <p className="text-center col-span-full text-gray-500 text-xl my-10">No items found.</p>
+                        <p className="text-center col-span-full text-gray-500 text-xl my-10">There Are No Dinner Foods Available Right Now.</p>
                     )
                 }
             </div>
@@ -360,10 +377,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.filter(food => food.category === "Drinks").length > 0 ? (
-                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
+                    ) : foods.filter(food => food.category === "Drinks" && food.isAvailable === true).length > 0 ? (
+                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,.5fr)) md:grid-cols-[repeat(auto-fit,minmax(300px,.5fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Drinks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                foods.filter(food => food.category === "Drinks" && food.isAvailable === true).slice(0, 3).map((food) => (
                                     <div
                                         key={food?._id}
                                         className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl"
@@ -371,7 +388,7 @@ const MenuSection = () => {
                                         {/* Image Section */}
                                         <div className="relative w-full h-52">
                                             <img
-                                                src={food.images[0].url}
+                                                src={food.images[imageIndexes[food._id] || 0]?.url}
                                                 alt={food.name}
                                                 className="w-full h-full object-cover"
                                             />
@@ -433,7 +450,7 @@ const MenuSection = () => {
                             }
                         </div>
                     ) : (
-                        <p className="text-center col-span-full text-gray-500 text-xl my-10">No items found.</p>
+                        <p className="text-center col-span-full text-gray-500 text-xl my-10">There Are No Drinks Available Right Now.</p>
                     )
                 }
             </div>
@@ -449,10 +466,10 @@ const MenuSection = () => {
                         <p className="text-center col-span-full text-red-500 text-2xl my-14 font-bold">
                             ⚠️ {error}
                         </p>
-                    ) : foods.filter(food => food.category === "Snacks").length > 0 ? (
-                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 md:px-20 py-6'>
+                    ) : foods.filter(food => food.category === "Snacks" && food.isAvailable === true).length > 0 ? (
+                        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,.5fr)) md:grid-cols-[repeat(auto-fit,minmax(300px,.5fr))] gap-6 md:px-20 py-6'>
                             {
-                                foods.filter(food => food.category === "Snacks").filter(food => food.isAvailable === true).slice(0, 3).map((food) => (
+                                foods.filter(food => food.category === "Snacks" && food.isAvailable === true).slice(0, 3).map((food) => (
                                     <div
                                         key={food?._id}
                                         className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all hover:scale-105 hover:shadow-xl"
@@ -460,7 +477,7 @@ const MenuSection = () => {
                                         {/* Image Section */}
                                         <div className="relative w-full h-52">
                                             <img
-                                                src={food.images[0].url}
+                                                src={food.images[imageIndexes[food._id] || 0]?.url}
                                                 alt={food.name}
                                                 className="w-full h-full object-cover"
                                             />
@@ -522,7 +539,7 @@ const MenuSection = () => {
                             }
                         </div>
                     ) : (
-                        <p className="text-center col-span-full text-gray-500 text-xl my-10">No items found.</p>
+                        <p className="text-center col-span-full text-gray-500 text-xl my-10">There Are No snacks Available Right Now.</p>
                     )
                 }
             </div>

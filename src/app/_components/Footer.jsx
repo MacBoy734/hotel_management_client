@@ -63,9 +63,9 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4">Social Media</h4>
             <ul className="flex space-x-4">
-              <li><a href="#" className="text-gray-400 hover:text-blue-600"><FaFacebook size={20} /></a></li>
-              <li><a href="#" className="text-gray-400 hover:text-blue-600"><FaTwitter size={20} /></a></li>
-              <li><a href="#" className="text-gray-400 hover:text-blue-600"><FaInstagram size={20} /></a></li>
+              <li><a href="https://www.facebook.com/joel.muthusi.52" className="text-gray-400 hover:text-blue-600"><FaFacebook size={20} /></a></li>
+              <li><a href="https://twitter.com/Mac_boy734" className="text-gray-400 hover:text-blue-600"><FaTwitter size={20} /></a></li>
+              <li><a href="https://www.instagram.com/mac_boy734/" className="text-gray-400 hover:text-blue-600"><FaInstagram size={20} /></a></li>
               <li><a href="#" className="text-gray-400 hover:text-blue-600"><FaLinkedin size={20} /></a></li>
             </ul>
           </div>

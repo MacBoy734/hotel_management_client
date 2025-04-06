@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { ClipLoader } from 'react-spinners'
+import { toast } from 'react-toastify'
 
 const ProfilePage = () => {
   const { user, status, isAuthenticated } = useSelector((state) => state.auth)
@@ -17,7 +18,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (status !== "loading" && !isAuthenticated) {
-      router.push("/auth/login")
+      toast.error("You need to be Login!")
+      router.replace("/auth/login")
     }
   }, [status, isAuthenticated, router])
 

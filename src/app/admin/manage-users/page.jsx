@@ -120,13 +120,13 @@ const ManageUsers = () => {
           filteredUsers.length > 0 ? (
             <div>
               {filteredUsers.map((user) => (
-                <div key={user._id} className="p-6 bg-white shadow-md rounded-xl border">
+                <div key={user._id} className="p-6 bg-white shadow-md rounded-xl border my-3">
                   <p className="text-lg font-semibold">UserID: {user._id}</p>
                   <p className="text-md text-gray-600">Name: {user.username}</p>
                   <p className="text-md text-gray-600">Email: {user.email}</p>
                   <p className="text-md text-gray-600">Phone: {user.phone}</p>
                   <p className="text-md text-gray-600">Role: {user.isAdmin ? 'admin' : 'customer'}</p>
-                  <p className="text-md text-gray-600">Created At: {new Date(user.createdAt).toLocaleString()}</p>
+                  <p className="text-md text-gray-600">Joined At: {new Date(user.createdAt).toLocaleString()}</p>
 
                   <div className="mt-4 flex space-x-2 justify-start">
                     <button
@@ -191,7 +191,6 @@ const ManageUsers = () => {
               </button>
               <button
                 className="px-4 py-2 bg-green-500 text-white rounded"
-                onClick={handleAddUser}
               >
                 Add
               </button>
@@ -244,8 +243,8 @@ const ManageUsers = () => {
                 Cancel
               </button>
               <button
-                className={`px-4 py-2 bg-blue-500 text-white rounded ${isProcessing && 'opacity-45'}`}
-                disabled={isProcessing}
+                className={`px-4 py-2 bg-blue-500 text-white rounded ${isProcessing || users.find(user => user._id === currentEditUser._id).isAdmin === currentEditUser.isAdmin && 'opacity-45'}`}
+                disabled={isProcessing || users.find(user => user._id === currentEditUser._id).isAdmin === currentEditUser.isAdmin}
                 onClick={() => handleEditUser(currentEditUser._id)}
               >
                 {isProcessing ? 'Saving...' : 'Save'}
